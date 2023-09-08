@@ -20,8 +20,9 @@ type Web struct {
 
 func New(conf config.Server, storage storage_types.Storage) Web {
 	e := echo.New()
-	templatesLoader := NewTemplatesLoader()
-	e.Renderer = NewRenderer(conf.Env == "dev", templatesLoader)
+	dev := conf.Env == "dev"
+	templatesLoader := NewTemplatesLoader(dev)
+	e.Renderer = NewRenderer(dev, templatesLoader)
 	return Web{
 		conf:            conf,
 		storage:         storage,

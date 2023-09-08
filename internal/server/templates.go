@@ -1,18 +1,22 @@
 package server
 
 import (
+	"embed"
 	"errors"
 	"html/template"
 	"io"
+	"os"
 
+	"github.com/biozz/paste/web"
 	"github.com/labstack/echo/v4"
 )
 
 type TemplatesLoader struct {
+	dev       bool
 	templates map[string]*template.Template
 }
 
-func NewTemplatesLoader() *TemplatesLoader {
+func NewTemplatesLoader(dev bool) *TemplatesLoader {
 	t := TemplatesLoader{}
 	t.Load()
 	return &t
@@ -29,10 +33,15 @@ func NewRenderer(dev bool, loader *TemplatesLoader) echo.Renderer {
 }
 
 func (t *TemplatesLoader) Load() {
-	t.templates = map[string]*template.Template{
-		"index": template.Must(template.New("").ParseFiles("web/templates/index.go.html", "web/templates/layout.go.html")),
-		"view":  template.Must(template.New("").ParseFiles("web/templates/view.go.html", "web/templates/layout.go.html")),
+	webFS := web.TemplatesFS
+	if t.dev {
+		webFS = os.DirFS("web").(embed.FS)
 	}
+	t.templates = map[string]*template.Template{
+		"index": template.Must(template.New("").ParseFS(webFS, "templates/index.go.html", "templates/layout.go.html")),
+		"view":  template.Must(template.New("").ParseFS(webFS, "templates/view.go.html", "templates/layout.go.html")),
+	}
+
 }
 
 var errTemplateNotFound = errors.New("template not found")

@@ -10,13 +10,13 @@ import (
 
 	"github.com/biozz/paste/internal/storage/migrations"
 	"github.com/biozz/paste/internal/storage_types"
-	_ "github.com/mattn/go-sqlite3"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"github.com/uptrace/bun/extra/bundebug"
 	"github.com/uptrace/bun/migrate"
+	_ "modernc.org/sqlite"
 )
 
 type SQLStorage struct {
@@ -49,7 +49,7 @@ func (s *SQLStorage) Init(ctx context.Context) (storage_types.Closer, error) {
 		sqlDB := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(s.uri)))
 		s.db = bun.NewDB(sqlDB, pgdialect.New())
 	} else {
-		sqlDB, err := sql.Open("sqlite3", s.uri)
+		sqlDB, err := sql.Open("sqlite", s.uri)
 		if err != nil {
 			return nil, err
 		}
