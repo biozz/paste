@@ -6,4 +6,5 @@ RUN apk add --no-cache --update gcc g++ && CGO_ENABLED=1 go build -o bin/paste m
 FROM alpine:3.17
 WORKDIR /app/
 COPY --from=builder /app/bin/paste .
+COPY web/templates ./web/templates
 ENTRYPOINT ["./paste"]
