@@ -1,10 +1,10 @@
 package server
 
 import (
-	"embed"
 	"errors"
 	"html/template"
 	"io"
+	"io/fs"
 	"os"
 
 	"github.com/biozz/paste/web"
@@ -17,7 +17,7 @@ type TemplatesLoader struct {
 }
 
 func NewTemplatesLoader(dev bool) *TemplatesLoader {
-	t := TemplatesLoader{}
+	t := TemplatesLoader{dev: dev}
 	t.Load()
 	return &t
 }
@@ -33,9 +33,10 @@ func NewRenderer(dev bool, loader *TemplatesLoader) echo.Renderer {
 }
 
 func (t *TemplatesLoader) Load() {
-	webFS := web.TemplatesFS
+	var webFS fs.FS
+	webFS = web.TemplatesFS
 	if t.dev {
-		webFS = os.DirFS("web").(embed.FS)
+		webFS = os.DirFS("web")
 	}
 	t.templates = map[string]*template.Template{
 		"index": template.Must(template.New("").ParseFS(webFS, "templates/index.go.html", "templates/layout.go.html")),

@@ -16,8 +16,8 @@ import (
 )
 
 const (
-    defaultNameLength = 10
-    maxContentLength = 20000
+	defaultNameLength = 10
+	maxContentLength  = 20000
 )
 
 func (h *Web) Index(c echo.Context) error {
@@ -36,9 +36,9 @@ func (h *Web) New(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-    if len(pasteIn.Content) > maxContentLength {
-        return c.String(http.StatusBadRequest, "too long")
-    }
+	if len(pasteIn.Content) > maxContentLength {
+		return c.String(http.StatusBadRequest, "too long")
+	}
 	paste := storage_types.Paste{
 		Content: pasteIn.Content,
 		Slug:    pasteIn.Slug,
@@ -80,15 +80,14 @@ func (h *Web) View(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	var lexer chroma.Lexer
 	if ext == "" {
-		lexer = lexers.Analyse(paste.Content)
-	} else {
-		for _, name := range lexers.Names(true) {
-			if name == ext {
-				lexer = lexers.Get(name)
-				break
-			}
+		return c.String(http.StatusOK, paste.Content)
+	}
+	var lexer chroma.Lexer
+	for _, name := range lexers.Names(true) {
+		if name == ext {
+			lexer = lexers.Get(name)
+			break
 		}
 	}
 	if lexer == nil {
@@ -113,7 +112,6 @@ func (h *Web) View(c echo.Context) error {
 		html.WithClasses(true),
 		html.WithCustomCSS(noBackground),
 		html.WithLineNumbers(true),
-		html.WithLinkableLineNumbers(true, ""),
 	)
 	err = formatter.WriteCSS(css, style)
 	if err != nil {
