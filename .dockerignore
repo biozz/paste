@@ -1,0 +1,6 @@
+bin/
+.task/
+*.db
+docker-compose.*
+.git
+docs/

@@ -1,0 +1,21 @@
+{{define "layout"}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/static/favicon.png" />
+    <link rel="stylesheet" href="/static/output.css" />
+    <link rel="stylesheet" href="/static/style.css" />
+    {{ template "styles" . }}
+    <title>paste</title>
+  </head>
+  <body class="m-0 p-3 bg-slate-700 text-sky-400 font-mono flex h-screen">
+    {{ template "content" . }}
+  </body>
+</html>
+{{ end }}

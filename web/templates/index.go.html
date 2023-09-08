@@ -1,0 +1,43 @@
+{{ define "styles" }}{{ end }} {{ define "content" }}
+<form hx-post="/" hx-trigger="submit" style="flex: 1">
+  <textarea
+    id="paste"
+    name="content"
+    placeholder="paste something"
+    autofocus
+    autocomplete="off"
+    autocorrect="off"
+    autocapitalize="off"
+    spellcheck="false"
+    class="w-full h-full overflow-auto outline-none text-base box-border border-none resize-none bg-transparent leading-tight"
+  ></textarea>
+
+  <div class="fixed top-3 right-3">
+    <input
+      type="text"
+      name="slug"
+      value="{{ .Slug }}"
+      class="w-32 border border-sky-500 rounded p-2 bg-slate-800 outline-none"
+    />
+    <button
+      type="submit"
+      class="border rounded p-2 border-sky-500 bg-slate-900 hover:bg-slate-800 text-sky-500"
+    >
+      Save
+    </button>
+  </div>
+</form>
+<script>
+  document.getElementById("paste").addEventListener("keydown", function (e) {
+    if (e.key == "Tab") {
+      e.preventDefault();
+      var start = this.selectionStart;
+      var end = this.selectionEnd;
+      this.value =
+        this.value.substring(0, start) + "  " + this.value.substring(end);
+      this.selectionStart = this.selectionEnd = start + 2;
+    }
+  });
+</script>
+<script src="/static/htmx_1.9.5.min.js"></script>
+{{ end }}

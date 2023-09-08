@@ -1,0 +1,36 @@
+version: "3"
+
+env:
+  ENV: "dev"
+  DB_DSN: "file:sqlite.db"
+  BASE_URL: "http://localhost:3001"
+  BIND: "localhost:3001"
+  AUTH_CLIENT_ID: ""
+  AUTH_CLIENT_SECRET: ""
+
+tasks:
+  deps:
+    cmds:
+      - go mod tidy
+      - go mod vendor
+  build:
+    cmds:
+      - go build -o bin/app main.go
+  import:
+    deps: [build]
+    cmds:
+      - ./bin/app import --taskdir {{ .CLI_ARGS }}
+  server:
+    deps: [build]
+    sources:
+      - internal/**/*.go
+    cmds:
+      - ./bin/app server
+  build-tailwind:
+    cmds:
+      - tailwindcss -c web/tailwindcss/tailwind.config.js -i web/tailwindcss/input.css -o web/static/output.css
+  tailwind:
+    cmds:
+      - tailwindcss -c web/tailwindcss/tailwind.config.js -i web/tailwindcss/input.css -o web/static/output.css -w
+  dev:
+    deps: [server, tailwind]
