@@ -50,8 +50,10 @@ func (h *Web) New(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
+	pastePath := "/" + paste.Slug
 	c.Response().Header().Set("HX-Redirect", "/"+paste.Slug)
-	return c.String(http.StatusOK, "ok")
+	pasteURL := h.conf.BaseURL + pastePath
+	return c.String(http.StatusOK, pasteURL)
 }
 
 func (h *Web) Redirect(c echo.Context) error {
@@ -80,7 +82,7 @@ func (h *Web) View(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
-	if ext == "" {
+	if ext == "txt" {
 		return c.String(http.StatusOK, paste.Content)
 	}
 	var lexer chroma.Lexer
