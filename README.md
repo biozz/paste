@@ -1,6 +1,6 @@
 # paste
 
-Yet anothe paste bin.
+Yet another paste bin.
 
 ## Features
 
